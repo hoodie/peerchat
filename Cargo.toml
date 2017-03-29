@@ -1,0 +1,9 @@
+[package]
+name = "peerchat"
+version = "0.1.0"
+authors = ["Hendrik Sollich <hendrik@hoodie.de>"]
+
+[dependencies]
+serde = "*"
+serde_json = "*"
+serde_derive = "*"
