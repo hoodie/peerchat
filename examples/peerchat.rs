@@ -10,10 +10,11 @@ use std::net::UdpSocket;
 use std::{io, env};
 use std::str::from_utf8;
 
-static SEND_IP: &str      = "10.1.135.148:54322";
-static BROADCAST_IP: &str = "10.1.135.148:54321";
+static SEND_IP: &str      = "127.0.0.1:54322";
+static BROADCAST_IP: &str = "127.0.0.1:54321";
 
-fn post_loop(name:&str) {
+fn post_loop(name: &str) {
+    send_arrive(name);
     loop {
         let mut input = String::new();
         if let Ok(_) = io::stdin().read_line(&mut input) {
@@ -71,7 +72,7 @@ fn receive(my_name: &str) {
     socket.set_broadcast(true).expect("set_broadcast call failed");
     let mut buf = [0; 4096];
     while let Ok((amt, _src)) = socket.recv_from(&mut buf) {
-        let msg = decode_msg(&buf[0..amt]);
+        let msg = Message::from_bytes(&buf[0..amt]);
 
         match msg {
             Message::Message{name, payload, ..} => {

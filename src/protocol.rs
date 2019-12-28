@@ -3,7 +3,7 @@ use std::net::SocketAddr;
 use serde_json;
 
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum Message {
     Message {
         name: String,
@@ -14,7 +14,7 @@ pub enum Message {
     Error
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum MessagePayload{
     Message {
         content: String,
@@ -25,12 +25,14 @@ pub enum MessagePayload{
     WhosThere
 }
 
-pub fn decode_msg(payload: &[u8]) -> Message {
-    match serde_json::from_slice::<Message>(payload){
-        Ok(msg) => msg,
-        Err(e) => {
-            error!("Cannot parse {} {:?}", e, payload);
-            Message::Error
+impl Message {
+    pub fn from_bytes(payload: &[u8]) -> Message {
+        match serde_json::from_slice::<Message>(payload){
+            Ok(msg) => msg,
+            Err(e) => {
+                error!("Cannot parse {} {:?}", e, payload);
+                Message::Error
+            }
         }
     }
 }

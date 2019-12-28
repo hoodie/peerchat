@@ -48,7 +48,7 @@ fn receive() {
 
     let mut buf = [0; 4096];
     while let Ok((amt, _src)) = socket.recv_from(&mut buf) {
-        let msg = decode_msg(&buf[0..amt]);
+        let msg = Message::from_bytes(&buf[0..amt]);
 
         match msg {
             Message::Message{name, payload, ..} => {
